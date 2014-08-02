@@ -40,7 +40,6 @@ libstm32plus=env.Library("stm32plus"+"-"+systemprefix+".a",matches)
 # install the library if the user gave the install option
 
 env.Install(INSTALLDIR+"/lib/"+INSTALLDIR_PREFIX,libstm32plus)
-env.Alias("install",INSTALLDIR)
 
 # install headers
 

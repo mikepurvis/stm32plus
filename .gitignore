@@ -53,3 +53,8 @@ ipch/
 obj/
 [dD]ebug_*/
 [Rr]elease_*/
+
+# Packaging output
+
+install
+*.deb

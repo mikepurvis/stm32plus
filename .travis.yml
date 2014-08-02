@@ -1,6 +1,4 @@
-language: cpp
-compiler: gcc
-cache: apt
+language: ruby
 env:
   - MODE=small MCU=f1mdvl HSE=8000000
   - MODE=small MCU=f1hd HSE=8000000
@@ -13,6 +11,6 @@ before_install:
   - sudo apt-get update
 install:
   - sudo apt-get install gcc-arm-none-eabi
+  - gem install fpm
 script:
-  - scons mode=$MODE mcu=$MCU hse=$HSE float=$FLOAT install INSTALLDIR=~/usr
-  - cd ~/usr && find . | sort
+  - scons mode=$MODE mcu=$MCU hse=$HSE float=$FLOAT packages

@@ -58,13 +58,19 @@ import os
 
 VERSION=os.popen('egrep "#define\s+STM32PLUS_BUILD" lib/include/config/stm32plus.h  | sed "s/^.*0x//g"').read()
 VERSION=VERSION.rstrip()
+VERSION_SHORT="%d.%d.%d" % (int(VERSION[0:2]), int(VERSION[2:4]), int(VERSION[4:6]))
 
 if len(VERSION) != 6:
   print "Unexpected error getting the library version"
   Exit(1)
 
-INSTALLDIR=ARGUMENTS.get('INSTALLDIR') or "/usr/local/arm-none-eabi"
+if 'packages' in COMMAND_LINE_TARGETS:
+  INSTALLDIR_DEFAULT="/tmp/stm32plus-installdir"
+else:
+  INSTALLDIR_DEFAULT="/usr/local/arm-none-eabi"
+INSTALLDIR=ARGUMENTS.get('INSTALLDIR') or INSTALLDIR_DEFAULT
 INSTALLDIR_PREFIX=ARGUMENTS.get('INSTALLDIR_PREFIX') or "stm32plus-"+VERSION
+Alias("install",INSTALLDIR)
 
 # get the required args and validate
 
@@ -174,3 +180,28 @@ SConscript("examples/SConscript",exports=["mode","mcu","hse","env","systemprefix
 SConscript("cmake/SConscript",
            exports=["env","systemprefix","libstm32plus","INSTALLDIR","INSTALLDIR_PREFIX","VERSION"],
            variant_dir="lib/build/"+systemprefix+"/cmake")
+
+# Create simple debian packages using FPM
+def PackageCommand(package, depends, paths): 
+    fpm_invocation_tmpl = ("fpm -a all -s dir -t deb -n {prefix}-{{package}} -d {{depends}} " +
+                           "-v {version} -C {installdir} --prefix /usr {{paths}}").format(
+                           prefix=INSTALLDIR_PREFIX, version=VERSION_SHORT, installdir=INSTALLDIR)
+    deb_file_tmpl = "{prefix}-{{package}}_{version}_all.deb".format(
+                    prefix=INSTALLDIR_PREFIX, version=VERSION_SHORT)
+    return env.Command(deb_file_tmpl.format(package=package), 'install',
+                       fpm_invocation_tmpl.format(package=package, depends=' -d '.join(depends), paths=' '.join(paths)))
+
+dev_package = PackageCommand(systemprefix+'-dev', ['gcc-arm-none-eabi', INSTALLDIR_PREFIX+'-cmake'], [
+    'include',
+    'lib/'+INSTALLDIR_PREFIX+"/libstm32plus-"+systemprefix+".a",
+    'lib/'+INSTALLDIR_PREFIX+"/stm32plus-config-"+systemprefix+".cmake"
+    ])
+
+examples_package = PackageCommand(systemprefix+'-examples', ['dfu-util'], ['bin'])
+
+cmake_package = PackageCommand('cmake', ['cmake'], [
+    'lib/'+INSTALLDIR_PREFIX+"/stm32plus-config.cmake",
+    'lib/'+INSTALLDIR_PREFIX+"/stm32plus-config-version.cmake"
+    ])
+
+Alias("packages", [dev_package, examples_package, cmake_package])
