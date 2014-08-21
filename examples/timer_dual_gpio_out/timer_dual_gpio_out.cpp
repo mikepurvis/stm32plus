@@ -52,8 +52,8 @@ class TimerDualGpioOutTest {
 
       Timer2<
         Timer2InternalClockFeature,       // the timer clock source is APB1 (APB on the F0)
-        TimerChannel1Feature,             // we're going to use channel 1...
-        TimerChannel2Feature,             // ...and we're going to use channel 2
+        TimerChannel1Feature<>,           // we're going to use channel 1...
+        TimerChannel2Feature<>,           // ...and we're going to use channel 2
         Timer2GpioFeature<                // we want to output something to GPIO
           TIMER_REMAP_NONE,               // the GPIO output will not be remapped
           TIM2_CH1_OUT,                   // we will output channel 1 to GPIO PA0
@@ -79,7 +79,7 @@ class TimerDualGpioOutTest {
        * the same names.
        */
 
-      timer.TimerChannel1Feature::initCompare(3999);
+      timer.TimerChannel1Feature<>::initCompare(3999);
 
       /*
        * Initialise the channel 2 output compare value to 2000 with the default
@@ -87,7 +87,7 @@ class TimerDualGpioOutTest {
        * of phase with the toggling of channel 1.
        */
 
-      timer.TimerChannel2Feature::initCompare(2000);
+      timer.TimerChannel2Feature<>::initCompare(2000);
 
       /*
        * Start the timer. Each time it ticks up to 4000 (which will take 1 second)
