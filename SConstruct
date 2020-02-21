@@ -162,7 +162,7 @@ env.Replace(RANLIB="arm-none-eabi-ranlib")
 
 # set the include directories
 
-env.Append(CPPPATH=["#lib/include","#lib/include/stl","#lib"])
+env.Append(CPPPATH=["#lib/include","#lib"])
 
 # create the C and C++ flags that are needed. We can't use the extra or pedantic errors on the ST library code.
 

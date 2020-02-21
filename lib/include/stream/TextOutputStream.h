@@ -7,6 +7,8 @@
 #pragma once
 
 
+#include "string/StringUtil.h"
+
 namespace stm32plus {
 
 

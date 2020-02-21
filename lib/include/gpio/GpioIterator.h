@@ -24,7 +24,7 @@ namespace stm32plus {
    *      }
    *    }
    *
-   *  This iterator is compatible with algorithms in the <algorithm> and <util/StdExt.h> header
+   *  This iterator is compatible with algorithms in the <algorithm> header
    *  that take a forward iterator. In common with the STL iterators you are expected to
    *  be diligent in checking the start and end position using begin() and end() because
    *  the increment and decrement operators will not check for you.

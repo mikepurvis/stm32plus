@@ -27,10 +27,8 @@ add_definitions("-DSTM32PLUS_BUILD")
 set(STM32PLUS_INSTALLDIR "${INSTALLDIR}" CACHE INTERNAL "stm32plus installdir")
 set(STM32PLUS_LIBS "${INSTALLDIR}/lib/%(INSTALLDIR_PREFIX)s/%(LIBSTM32PLUS)s" CACHE INTERNAL "library location")
 
-# These paths cover your bases if you're using pure stm32plus interfaces.
-set(STM32PLUS_INCLUDE_DIRS
-  ${INSTALLDIR}/include/%(INSTALLDIR_PREFIX)s/
-  ${INSTALLDIR}/include/%(INSTALLDIR_PREFIX)s/stl)
+# This covers your bases if you're using pure stm32plus interfaces.
+set(STM32PLUS_INCLUDE_DIRS ${INSTALLDIR}/include/%(INSTALLDIR_PREFIX)s/)
 
 # You'll need include paths under here if you're calling into stdperiph or cmsis directly.
 set(STM32PLUS_FWLIB_DIR ${INSTALLDIR}/include/%(INSTALLDIR_PREFIX)s/fwlib)
